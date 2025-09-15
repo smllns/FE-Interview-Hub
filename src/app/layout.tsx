@@ -13,6 +13,21 @@ const robotoMono = Roboto_Mono({
 export const metadata: Metadata = {
   title: 'Frontend Interview Hub',
   description: 'Space for frontend interview preparation',
+  openGraph: {
+    title: 'Frontend Interview Hub',
+    description: 'Space for frontend interview preparation',
+    url: 'https://fe-interview-hub.vercel.app/',
+    siteName: 'FE Interview Hub',
+    images: [
+      {
+        url: '/preview.png',
+        width: 1200,
+        height: 630,
+        alt: 'Lunera preview',
+      },
+    ],
+    type: 'website',
+  },
 };
 
 export default function RootLayout({
