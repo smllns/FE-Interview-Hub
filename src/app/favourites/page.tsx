@@ -8,10 +8,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useScrollTo } from '@/hooks/useScrollTo';
 import { useAuth } from '@/components/useAuth';
 import { SkeletonList } from '@/components/SkeletonList';
-import { QuestionCard } from '@/components/QuestionCard';
-import ToggleFilter from '@/components/ToggleFilter';
 import Footer from '@/components/Footer';
 import { Question } from '@/lib/types';
+import ModeToggle from '@/components/ModeToggle';
+import QuestionsList from '@/components/QuestionsList';
 
 const FavPage = () => {
   const mainRef = useRef<HTMLDivElement | null>(null);
@@ -74,26 +74,20 @@ const FavPage = () => {
         className='min-h-screen flex flex-col justify-center items-center px-4'
         ref={mainRef}
       >
-        <div className='flex justify-center px-8 pt-32 pb-8'>
-          <ToggleFilter
-            options={['practice', 'study']}
-            selected={questionsFilterMode}
-            onChange={setQuestionsFilterMode}
-            title='Display mode'
-          />
-        </div>
+        <ModeToggle
+          questionsFilterMode={questionsFilterMode}
+          setQuestionsFilterMode={setQuestionsFilterMode}
+          pt={true}
+        />
         <div className='w-full max-w-3xl space-y-6 pb-8 mx-auto'>
           {favQuestions.length === 0 ? (
             <SkeletonList count={5} isDark={isDark} />
           ) : (
-            favQuestions.map((q) => (
-              <QuestionCard
-                key={q.id}
-                question={q}
-                isDark={isDark}
-                mode={questionsFilterMode}
-              />
-            ))
+            <QuestionsList
+              questions={favQuestions}
+              isDark={isDark}
+              questionsFilterMode={questionsFilterMode}
+            />
           )}
         </div>
       </div>
