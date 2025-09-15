@@ -42,14 +42,14 @@ const GradientBg = () => {
           positionX={-1}
           positionY={0}
           positionZ={0}
-          rotationX={7}
+          rotationX={5}
           rotationY={43}
           rotationZ={-6}
           color1={color1}
           color2={color2}
           color3={color3}
           reflection={0.1}
-          cAzimuthAngle={62}
+          cAzimuthAngle={50}
           cPolarAngle={94}
           cDistance={5}
           cameraZoom={15.3}
