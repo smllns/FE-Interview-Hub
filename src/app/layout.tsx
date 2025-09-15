@@ -23,7 +23,7 @@ export const metadata: Metadata = {
         url: '/preview.png',
         width: 1200,
         height: 630,
-        alt: 'Lunera preview',
+        alt: 'FE Interview Hub preview',
       },
     ],
     type: 'website',
@@ -38,6 +38,18 @@ export default function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning>
       <head>
+        <link rel='manifest' href='/manifest.json' />
+        <meta name='theme-color' content='#000000' />
+        <link
+          rel='apple-touch-icon'
+          sizes='192x192'
+          href='/icons/icon-192x192.png'
+        />
+        <link
+          rel='apple-touch-icon'
+          sizes='512x512'
+          href='/icons/icon-512x512.png'
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `

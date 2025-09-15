@@ -2,7 +2,7 @@
 import NavigationBar from '@/components/Navbar';
 import FaultyTerminal from '@/components/ui/backgrounds/heroBg';
 import { ChevronsDown } from 'lucide-react';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { MainBento } from '@/components/MainBento';
 import { useScrollTo } from '@/hooks/useScrollTo';
@@ -10,6 +10,11 @@ import Footer from '@/components/Footer';
 
 const HomePage = () => {
   const bentoRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    }
+  }, []);
 
   const scrollToBento = useScrollTo(bentoRef);
   return (
