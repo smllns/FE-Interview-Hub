@@ -5,11 +5,12 @@ import ToggleFilter from './ToggleFilter';
 import { DifficultyBento } from './DifficultyBento';
 import { TopicsBento } from './TopicsBento';
 import ContentPageHero from './ContentPageHero';
-import { QuestionCard } from './QuestionCard';
 import { useScrollTo } from '@/hooks/useScrollTo';
 import { useShuffledFilter } from '@/hooks/useShuffledFilter';
 import { SkeletonList } from './SkeletonList';
 import { Question } from '@/lib/types';
+import ModeToggle from './ModeToggle';
+import QuestionsList from './QuestionsList';
 
 interface ContentPageProps {
   title: string;
@@ -38,23 +39,6 @@ export function ContentPage({
   const scrollToFiltered = useScrollTo(filteredRef);
 
   const shuffledQuestions = useShuffledFilter(questions);
-
-  const renderAllQuestions = () => (
-    <div className='w-full max-w-3xl space-y-6 py-8'>
-      {shuffledQuestions.length === 0 ? (
-        <SkeletonList count={5} isDark={isDark} />
-      ) : (
-        shuffledQuestions.map((q) => (
-          <QuestionCard
-            key={q.id}
-            question={q}
-            isDark={isDark}
-            mode={questionsFilterMode}
-          />
-        ))
-      )}
-    </div>
-  );
 
   const filteredQuestionsDifficulty = useShuffledFilter(
     questions,
@@ -116,7 +100,24 @@ export function ContentPage({
               }}
             />
           )}
-          {filterMode === 'all' && renderAllQuestions()}
+          {filterMode === 'all' && (
+            <div className='w-full max-w-3xl space-y-6 py-8'>
+              <ModeToggle
+                questionsFilterMode={questionsFilterMode}
+                setQuestionsFilterMode={setQuestionsFilterMode}
+                pt={false}
+              />
+              {shuffledQuestions.length === 0 ? (
+                <SkeletonList count={5} isDark={isDark} />
+              ) : (
+                <QuestionsList
+                  questions={shuffledQuestions}
+                  isDark={isDark}
+                  questionsFilterMode={questionsFilterMode}
+                />
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -125,26 +126,20 @@ export function ContentPage({
           className='min-h-screen flex flex-col justify-center items-center px-4'
           ref={filteredRef}
         >
-          <div className='flex justify-center px-8 pt-32 pb-8'>
-            <ToggleFilter
-              options={['practice', 'study']}
-              selected={questionsFilterMode}
-              onChange={setQuestionsFilterMode}
-              title='Display mode'
-            />
-          </div>
+          <ModeToggle
+            questionsFilterMode={questionsFilterMode}
+            setQuestionsFilterMode={setQuestionsFilterMode}
+            pt={true}
+          />
           <div className='w-full max-w-3xl space-y-6 pb-8 mx-auto'>
             {filteredQuestions.length === 0 ? (
               <SkeletonList count={5} isDark={isDark} />
             ) : (
-              filteredQuestions.map((q) => (
-                <QuestionCard
-                  key={q.id}
-                  question={q}
-                  isDark={isDark}
-                  mode={questionsFilterMode}
-                />
-              ))
+              <QuestionsList
+                questions={filteredQuestions}
+                isDark={isDark}
+                questionsFilterMode={questionsFilterMode}
+              />
             )}
           </div>
         </div>
