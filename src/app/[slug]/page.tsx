@@ -1,0 +1,62 @@
+'use client';
+import React, { useEffect, useState } from 'react';
+import { ContentPage } from '@/components/ContentPage';
+import { CONTENT_DATA } from '@/lib/contentData';
+import NavigationBar from '@/components/Navbar';
+import { Question } from '@/lib/types';
+import Footer from '@/components/Footer';
+import { SpinningText } from '@/components/ui/loader';
+
+type Slug = keyof typeof CONTENT_DATA;
+
+interface PageProps {
+  params: Promise<{ slug: Slug }>;
+}
+
+export default function DynamicPage({ params }: PageProps) {
+  const [data, setData] = React.useState<(typeof CONTENT_DATA)[Slug] | null>(
+    null
+  );
+  const [questions, setQuestions] = useState<Question[]>([]);
+
+  const resolvedParams = React.use(params);
+
+  useEffect(() => {
+    setData(CONTENT_DATA[resolvedParams.slug]);
+  }, [resolvedParams.slug]);
+
+  // i fetch all questions only once and filter them on the client side,
+  // so I don't need to add resolvedParams.slug to deps array
+
+  useEffect(() => {
+    async function fetchQuestions() {
+      const res = await fetch('/api/questions');
+      const data = await res.json();
+      const filtered: Question[] = data.filter(
+        (q: Question) => q.section === resolvedParams.slug
+      );
+      setQuestions(filtered);
+    }
+    fetchQuestions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (!data)
+    return (
+      <div className='fixed inset-0 flex items-center justify-center z-50'>
+        <SpinningText className='text-4xl' duration={4} radius={4}>
+          Loading data
+        </SpinningText>
+      </div>
+    );
+
+  return (
+    <>
+      <div className='sticky w-full top-10 z-20 px-4'>
+        <NavigationBar />
+      </div>
+      <ContentPage {...data} questions={questions} />
+      <Footer />
+    </>
+  );
+}
