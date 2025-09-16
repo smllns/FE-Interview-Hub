@@ -10,7 +10,7 @@ interface SkeletonListProps {
 export const SkeletonCard = ({ isDark }: { isDark: boolean }) => (
   <div
     suppressHydrationWarning
-    className={`w-full h-24 rounded-xl animate-pulse ${
+    className={`w-full max-w-3xl mx-auto h-24 rounded-xl animate-pulse ${
       isDark ? 'bg-white/20' : 'bg-black/20'
     }`}
   />

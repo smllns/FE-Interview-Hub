@@ -18,7 +18,8 @@ const ModeToggle: React.FC<ModeToggleProps> = ({
         options={['practice', 'study']}
         selected={questionsFilterMode}
         onChange={setQuestionsFilterMode}
-        title='Display mode'
+        title='Display mode:'
+        colors='bg-pink-600/40 dark:bg-blue-400/40'
       />
     </div>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { shuffleArray } from '@/lib/shuffleArray';
 
 export function useShuffledFilter<T>(
@@ -7,20 +7,26 @@ export function useShuffledFilter<T>(
   value?: T[keyof T] | null
 ) {
   const [shuffled, setShuffled] = useState<T[]>([]);
+  const prevItemsKey = useRef<string | null>(null);
 
   useEffect(() => {
     if (!items || items.length === 0) {
       setShuffled([]);
+      prevItemsKey.current = null;
       return;
     }
 
     let filtered = items;
-
-    if (key && value) {
+    if (key && value !== undefined && value !== null) {
       filtered = items.filter((item) => item[key] === value);
     }
 
-    setShuffled(shuffleArray(filtered));
+    const currentKey = JSON.stringify(filtered.map((item) => item));
+
+    if (prevItemsKey.current !== currentKey) {
+      prevItemsKey.current = currentKey;
+      setShuffled(shuffleArray(filtered));
+    }
   }, [items, key, value]);
 
   return shuffled;

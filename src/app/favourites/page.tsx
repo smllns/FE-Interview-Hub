@@ -7,11 +7,9 @@ import { motion } from 'framer-motion';
 import React, { useEffect, useRef, useState } from 'react';
 import { useScrollTo } from '@/hooks/useScrollTo';
 import { useAuth } from '@/components/useAuth';
-import { SkeletonList } from '@/components/SkeletonList';
 import Footer from '@/components/Footer';
 import { Question } from '@/lib/types';
-import ModeToggle from '@/components/ModeToggle';
-import QuestionsList from '@/components/QuestionsList';
+import QuestionComponent from '@/components/QuestionComponent';
 
 const FavPage = () => {
   const mainRef = useRef<HTMLDivElement | null>(null);
@@ -70,27 +68,15 @@ const FavPage = () => {
           <ChevronsDown className='text-black dark:text-white w-10 h-10' />
         </motion.div>
       </div>
-      <div
-        className='min-h-screen flex flex-col justify-center items-center px-4'
+      <QuestionComponent
+        isDark={isDark}
+        questions={favQuestions}
+        questionsFilterMode={questionsFilterMode}
+        setQuestionsFilterMode={setQuestionsFilterMode}
+        count={80}
         ref={mainRef}
-      >
-        <ModeToggle
-          questionsFilterMode={questionsFilterMode}
-          setQuestionsFilterMode={setQuestionsFilterMode}
-          pt={true}
-        />
-        <div className='w-full max-w-3xl space-y-6 pb-8 mx-auto'>
-          {favQuestions.length === 0 ? (
-            <SkeletonList count={5} isDark={isDark} />
-          ) : (
-            <QuestionsList
-              questions={favQuestions}
-              isDark={isDark}
-              questionsFilterMode={questionsFilterMode}
-            />
-          )}
-        </div>
-      </div>
+        pt={true}
+      />
       <Footer />
     </div>
   );

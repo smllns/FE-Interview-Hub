@@ -7,10 +7,8 @@ import { TopicsBento } from './TopicsBento';
 import ContentPageHero from './ContentPageHero';
 import { useScrollTo } from '@/hooks/useScrollTo';
 import { useShuffledFilter } from '@/hooks/useShuffledFilter';
-import { SkeletonList } from './SkeletonList';
 import { Question } from '@/lib/types';
-import ModeToggle from './ModeToggle';
-import QuestionsList from './QuestionsList';
+import QuestionComponent from './QuestionComponent';
 
 interface ContentPageProps {
   title: string;
@@ -68,7 +66,10 @@ export function ContentPage({
         scrollToMain={scrollToMain}
       />
 
-      <div className='min-h-screen w-full flex flex-col' ref={mainRef}>
+      <div
+        className='min-h-screen max-w-dvw overflow-x-hidden flex  flex-col'
+        ref={mainRef}
+      >
         <div className='flex justify-center px-8 pt-32'>
           <ToggleFilter
             options={['complexity', 'topics', 'all']}
@@ -78,7 +79,7 @@ export function ContentPage({
           />
         </div>
 
-        <div className='flex-1 flex items-center justify-center px-4'>
+        <div className='flex-1 flex items-center justify-center '>
           {filterMode === 'complexity' && (
             <DifficultyBento
               isDark={isDark}
@@ -101,48 +102,28 @@ export function ContentPage({
             />
           )}
           {filterMode === 'all' && (
-            <div className='w-full max-w-3xl space-y-6 py-8'>
-              <ModeToggle
-                questionsFilterMode={questionsFilterMode}
-                setQuestionsFilterMode={setQuestionsFilterMode}
-                pt={false}
-              />
-              {shuffledQuestions.length === 0 ? (
-                <SkeletonList count={5} isDark={isDark} />
-              ) : (
-                <QuestionsList
-                  questions={shuffledQuestions}
-                  isDark={isDark}
-                  questionsFilterMode={questionsFilterMode}
-                />
-              )}
-            </div>
+            <QuestionComponent
+              isDark={isDark}
+              questions={shuffledQuestions}
+              questionsFilterMode={questionsFilterMode}
+              setQuestionsFilterMode={setQuestionsFilterMode}
+              count={300}
+              pt={false}
+            />
           )}
         </div>
       </div>
 
       {filterMode !== 'all' && (
-        <div
-          className='min-h-screen flex flex-col justify-center items-center px-4'
+        <QuestionComponent
+          isDark={isDark}
+          questions={filteredQuestions}
+          questionsFilterMode={questionsFilterMode}
+          setQuestionsFilterMode={setQuestionsFilterMode}
+          count={80}
           ref={filteredRef}
-        >
-          <ModeToggle
-            questionsFilterMode={questionsFilterMode}
-            setQuestionsFilterMode={setQuestionsFilterMode}
-            pt={true}
-          />
-          <div className='w-full max-w-3xl space-y-6 pb-8 mx-auto'>
-            {filteredQuestions.length === 0 ? (
-              <SkeletonList count={5} isDark={isDark} />
-            ) : (
-              <QuestionsList
-                questions={filteredQuestions}
-                isDark={isDark}
-                questionsFilterMode={questionsFilterMode}
-              />
-            )}
-          </div>
-        </div>
+          pt={true}
+        />
       )}
     </div>
   );

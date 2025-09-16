@@ -4,6 +4,7 @@ import AnswerBtn from './AnswerBtn';
 import AnswerContent from './AnswerContent';
 import { LikeButton } from './LikeButton';
 import { Question } from '@/lib/types';
+import { CoolMode } from './ui/coolBtn';
 
 interface QuestionCardProps {
   question: Question;
@@ -22,7 +23,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     str.charAt(0).toUpperCase() + str.slice(1);
 
   return (
-    <div className='p-6 border border-black/30 dark:border-white/15 rounded-xl shadow-sm bg-white dark:bg-white/10 '>
+    <div className='relative w-full p-6 border border-black/30 dark:border-white/15 rounded-xl shadow-sm bg-white dark:bg-neutral-800 max-w-3xl mx-auto z-10'>
       <div className='flex justify-between items-start'>
         <div className='flex flex-col'>
           <div className=' text-sm  flex flex-wrap gap-3 bg-black/10  dark:bg-black/20 w-fit p-2 rounded-xl mb-3'>
@@ -36,7 +37,18 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         </div>
 
         <div className='flex flex-col items-end gap-2 ml-4'>
-          <LikeButton questionId={question.id} />
+          <CoolMode
+            options={{
+              particle: '🩷',
+              particleCount: 3,
+              speedHorz: 3,
+              speedUp: 1,
+              size: 10,
+            }}
+          >
+            <LikeButton questionId={question.id} />
+          </CoolMode>
+
           {mode === 'practice' && hasAnswerContent && (
             <AnswerBtn
               showAnswer={showAnswer}
