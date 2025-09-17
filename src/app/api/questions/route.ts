@@ -1,13 +1,36 @@
 import { NextResponse } from 'next/server';
-import { NotionQueryResponse, NotionPage, Question } from '@/lib/types';
+import {
+  NotionQueryResponse,
+  NotionPage,
+  Question,
+  NotionQueryBody,
+} from '@/lib/types';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const section = searchParams.get('section');
+
     const questions: Question[] = [];
     let hasMore = true;
     let startCursor: string | undefined = undefined;
 
     while (hasMore) {
+      const body: NotionQueryBody = {
+        page_size: 100,
+        start_cursor: startCursor,
+      };
+
+      // filtration based on section
+      if (section) {
+        body.filter = {
+          property: 'Section',
+          select: {
+            equals: section,
+          },
+        };
+      }
+
       const res = await fetch(
         `https://api.notion.com/v1/databases/${process.env.NOTION_DATABASE_ID}/query`,
         {
@@ -17,10 +40,7 @@ export async function GET() {
             'Notion-Version': '2022-06-28',
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            page_size: 100,
-            start_cursor: startCursor,
-          }),
+          body: JSON.stringify(body),
         }
       );
 
@@ -53,14 +73,6 @@ export async function GET() {
     return NextResponse.json(questions);
   } catch (err: unknown) {
     console.error('Notion fetch error:', err);
-
-    if (err instanceof Error) {
-      return NextResponse.json(
-        { error: 'Failed to fetch questions', details: err.message },
-        { status: 500 }
-      );
-    }
-
     return NextResponse.json(
       { error: 'Failed to fetch questions', details: String(err) },
       { status: 500 }

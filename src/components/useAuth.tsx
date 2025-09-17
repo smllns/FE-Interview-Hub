@@ -1,13 +1,14 @@
 'use client';
 import { supabase } from '@/lib/supabaseClient';
 import { User as SupabaseUser } from '@supabase/auth-js';
+import debounce from 'lodash/debounce';
 
 import {
   createContext,
   ReactNode,
-  useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 
@@ -34,22 +35,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(data.user ?? null);
   };
 
-  const refreshFavourites = useCallback(async () => {
-    if (!user) {
-      setFavourites([]);
-      return;
-    }
+  const refreshFavourites = useMemo(() => {
+    const fn = debounce(async () => {
+      if (!user) {
+        setFavourites([]);
+        return;
+      }
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('favourites')
+        .eq('id', user.id)
+        .single();
+      if (!error && data?.favourites) {
+        setFavourites(data.favourites);
+      }
+    }, 300);
 
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('favourites')
-      .eq('id', user.id)
-      .single();
-
-    if (!error && data?.favourites) {
-      setFavourites(data.favourites);
-    }
+    return fn;
   }, [user]);
+
+  useEffect(() => {
+    return () => {
+      refreshFavourites.cancel();
+    };
+  }, [refreshFavourites]);
 
   useEffect(() => {
     refreshUser();

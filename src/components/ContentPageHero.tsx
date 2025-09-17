@@ -30,10 +30,10 @@ const ContentPageHero: React.FC<ContentPageHeroProps> = ({
     rounded-xl
     '
       >
-        <h1 className='min-[320px]:text-4xl sm:text-6xl font-black mb-4'>
+        <h1 className='min-[320px]:text-3xl sm:text-4xl md:text-6xl font-black mb-4'>
           {title}
         </h1>
-        <p className='mb-8 min-[320px]:text-lg sm:text-xl'>{description}</p>
+        <p className='mb-8 min-[320px]:text-sm sm:text-xl'>{description}</p>
         <motion.div
           className='mx-auto py-4 w-10 h-10 cursor-pointer'
           animate={{ y: [0, 10, 0] }}

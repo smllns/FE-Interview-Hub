@@ -107,7 +107,7 @@ const applyParticleEffect = (
       particle.innerHTML = `<img src="${particleType}" width="${size}" height="${size}" style="border-radius: 50%">`;
     } else {
       // Handle emoji or text characters
-      const fontSizeMultiplier = 3; // Make emojis 3x bigger
+      const fontSizeMultiplier = 2.5; // Make emojis 2.5x bigger
       const emojiSize = size * fontSizeMultiplier;
       particle.innerHTML = `<div style="font-size: ${emojiSize}px; line-height: 1; text-align: center; width: ${size}px; height: ${size}px; display: flex; align-items: center; justify-content: center; transform: scale(${fontSizeMultiplier}); transform-origin: center;">${particleType}</div>`;
     }
@@ -199,6 +199,10 @@ const applyParticleEffect = (
   const tapHandler = (e: MouseEvent | TouchEvent) => {
     updateMousePosition(e);
     autoAddParticle = true;
+
+    setTimeout(() => {
+      autoAddParticle = false;
+    }, 500);
   };
 
   const disableAutoAddParticle = () => {

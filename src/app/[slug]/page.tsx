@@ -25,21 +25,14 @@ export default function DynamicPage({ params }: PageProps) {
     setData(CONTENT_DATA[resolvedParams.slug]);
   }, [resolvedParams.slug]);
 
-  // i fetch all questions only once and filter them on the client side,
-  // so I don't need to add resolvedParams.slug to deps array
-
   useEffect(() => {
     async function fetchQuestions() {
-      const res = await fetch('/api/questions');
+      const res = await fetch(`/api/questions?section=${resolvedParams.slug}`);
       const data = await res.json();
-      const filtered: Question[] = data.filter(
-        (q: Question) => q.section === resolvedParams.slug
-      );
-      setQuestions(filtered);
+      setQuestions(data);
     }
     fetchQuestions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [resolvedParams.slug]);
 
   if (!data)
     return (

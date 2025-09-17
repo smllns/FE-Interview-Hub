@@ -7,6 +7,17 @@ import {
 } from './authSchemas';
 
 // notion + question
+export type NotionQueryBody = {
+  page_size: number;
+  start_cursor?: string;
+  filter?: {
+    property: string;
+    select: {
+      equals: string;
+    };
+  };
+};
+
 export interface NotionSelect {
   name: string;
 }

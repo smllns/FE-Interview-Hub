@@ -5,6 +5,7 @@ import { useAuth } from './useAuth';
 import AuthModal from './AuthModal';
 import AuthDrawer from './AuthDrawer';
 import { addFavorite, removeFavorite } from '@/lib/favourites';
+
 interface LikeButtonProps {
   questionId: string;
 }
@@ -13,7 +14,6 @@ export const LikeButton: React.FC<LikeButtonProps> = ({ questionId }) => {
   const { user, favourites, refreshFavourites } = useAuth();
   const isInitiallyLiked = favourites.includes(questionId);
   const [liked, setLiked] = useState(isInitiallyLiked);
-
   const [authOpen, setAuthOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -26,21 +26,29 @@ export const LikeButton: React.FC<LikeButtonProps> = ({ questionId }) => {
       setAuthOpen(true);
       return;
     }
+    if (loading) return;
     setLoading(true);
-    if (!liked) {
-      const { error } = await addFavorite(user.id, questionId);
-      if (!error) {
-        setLiked(true);
-        refreshFavourites();
+    try {
+      if (!liked) {
+        const { error } = await addFavorite(user.id, questionId);
+        if (!error) {
+          setLiked(true);
+          refreshFavourites();
+        }
+      } else {
+        const { error } = await removeFavorite(user.id, questionId);
+        if (!error) {
+          setLiked(false);
+          refreshFavourites();
+        } else {
+          setLiked(true);
+        }
       }
-    } else {
-      const { error } = await removeFavorite(user.id, questionId);
-      if (!error) {
-        setLiked(false);
-        refreshFavourites();
-      }
+    } catch (err) {
+      console.error('Error handling favorite:', err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -67,7 +75,6 @@ export const LikeButton: React.FC<LikeButtonProps> = ({ questionId }) => {
           />
         </button>
 
-        {/* Tooltip */}
         <span className='absolute bottom-full mb-2 left-1/2 -translate-x-1/2 px-2 py-1 text-xs rounded dark:bg-black dark:text-white bg-white text-black border border-black/20 dark:border-white/30 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap'>
           {liked ? 'Remove from favourites' : 'Add to favourites'}
         </span>
