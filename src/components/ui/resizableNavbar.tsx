@@ -2,29 +2,15 @@
 import { cn } from '@/lib/utils';
 import { motion, useScroll, useMotionValueEvent } from 'motion/react';
 import Link from 'next/link';
-
 import React, { useRef, useState } from 'react';
 import { PaintRoller } from 'lucide-react';
-
-interface NavbarProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-interface NavBodyProps {
-  children: React.ReactNode;
-  className?: string;
-  visible?: boolean;
-}
-
-interface NavItemsProps {
-  items: {
-    name: string;
-    link: string;
-  }[];
-  className?: string;
-  onItemClick?: () => void;
-}
+import { usePathname, useRouter } from 'next/navigation';
+import {
+  NavbarLogoProps,
+  NavbarProps,
+  NavBodyProps,
+  NavItemsProps,
+} from '@/lib/types';
 
 export const Navbar = ({ children, className }: NavbarProps) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -80,13 +66,21 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
         className
       )}
     >
-      {children}
+      {React.Children.map(children, (child) =>
+        React.isValidElement(child)
+          ? React.cloneElement(
+              child as React.ReactElement<{ visible?: boolean }>,
+              { visible }
+            )
+          : child
+      )}
     </motion.div>
   );
 };
 
 export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
   const [hovered, setHovered] = useState<number | null>(null);
+  const pathname = usePathname();
 
   return (
     <motion.div
@@ -96,31 +90,42 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
         className
       )}
     >
-      {items.map((item, idx) => (
-        <Link
-          onMouseEnter={() => setHovered(idx)}
-          onClick={onItemClick}
-          className='relative px-4 py-2 text-neutral-100 transition-all '
-          key={`link-${idx}`}
-          href={item.link}
-        >
-          {hovered === idx && (
-            <motion.div
-              layoutId='hovered'
-              className='absolute inset-0 h-full w-full rounded-xl dark:bg-white/10 bg-black/10'
-            />
-          )}
-          <span className='relative z-20'>{item.name}</span>
-        </Link>
-      ))}
+      {items.map((item, idx) => {
+        const isActive = pathname === item.link;
+
+        return (
+          <Link
+            onMouseEnter={() => setHovered(idx)}
+            onClick={onItemClick}
+            className='relative px-4 py-2 text-neutral-100 transition-all'
+            key={`link-${idx}`}
+            href={item.link}
+          >
+            {(hovered === idx || isActive) && (
+              <motion.div
+                layoutId='hovered'
+                className='absolute inset-0 h-full w-full rounded-xl dark:bg-white/20 bg-black/20'
+                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              />
+            )}
+            <span className='relative z-20'>{item.name}</span>
+          </Link>
+        );
+      })}
     </motion.div>
   );
 };
 
-export const NavbarLogo = () => {
+export const NavbarLogo = ({ visible }: NavbarLogoProps) => {
+  const router = useRouter();
   const handleClick = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (visible) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      router.push('/home');
+    }
   };
+
   return (
     <button
       onClick={handleClick}

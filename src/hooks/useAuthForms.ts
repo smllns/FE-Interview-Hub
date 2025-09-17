@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { LoginForm, ResetForm, ResetPassForm, SignupForm } from '@/lib/types';
+import {
+  LoginForm,
+  ResetForm,
+  ResetPassForm,
+  SignupForm,
+  UseAuthFormsProps,
+} from '@/lib/types';
 import {
   loginSchema,
   resetPassSchema,
@@ -20,13 +26,6 @@ import {
 import { showToast } from '@/lib/toastUtils';
 import { useRouter } from 'next/navigation';
 import { clearUserData } from '@/lib/clearUserData';
-
-interface UseAuthFormsProps {
-  initialMode?: 'login' | 'signup' | 'reset';
-  open?: boolean;
-  setOpen?: (open: boolean) => void;
-  setSuccess?: (success: boolean) => void;
-}
 
 export const useAuthForms = ({
   initialMode = 'login',

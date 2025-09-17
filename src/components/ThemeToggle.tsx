@@ -5,11 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 import { flushSync } from 'react-dom';
 import { cn } from '@/lib/utils';
 
-type Props = {
-  className?: string;
-};
-
-export const AnimatedThemeToggler = ({ className }: Props) => {
+export const AnimatedThemeToggler = ({ className }: { className?: string }) => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 

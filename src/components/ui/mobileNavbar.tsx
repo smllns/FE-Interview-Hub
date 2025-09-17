@@ -1,33 +1,19 @@
 'use client';
-
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { AnimatedThemeToggler } from '../ThemeToggle';
 import { AnimatedHamburgerButton } from './hamburgerBtn';
-import { Heart, Settings, UserRound } from 'lucide-react';
 import AuthDrawer from '../AuthDrawer';
-import { useAuth } from '../useAuth';
-import { useRouter } from 'next/navigation';
+import { NavIcons } from '../NavIcons';
+import { usePathname } from 'next/navigation';
+import {
+  NavItemsProps,
+  MobileNavMenuProps,
+  NavBodyProps,
+  MobileNavToggleProps,
+} from '@/lib/types';
 
-interface MobileNavProps {
-  children: React.ReactNode;
-  className?: string;
-  visible?: boolean;
-}
-
-interface MobileNavHeaderProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-interface MobileNavToggleProps {
-  isOpen: boolean;
-  onClick: () => void;
-  toggleRef?: React.RefObject<HTMLDivElement | null>;
-}
-
-export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
+export const MobileNav = ({ children, className, visible }: NavBodyProps) => {
   return (
     <motion.div
       animate={{
@@ -51,7 +37,14 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
         className
       )}
     >
-      {children}
+      {React.Children.map(children, (child) =>
+        React.isValidElement(child)
+          ? React.cloneElement(
+              child as React.ReactElement<{ visible?: boolean }>,
+              { visible }
+            )
+          : child
+      )}
     </motion.div>
   );
 };
@@ -59,7 +52,8 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
 export const MobileNavHeader = ({
   children,
   className,
-}: MobileNavHeaderProps) => {
+  visible,
+}: NavBodyProps) => {
   return (
     <div
       className={cn(
@@ -67,18 +61,17 @@ export const MobileNavHeader = ({
         className
       )}
     >
-      {children}
+      {React.Children.map(children, (child) =>
+        React.isValidElement(child)
+          ? React.cloneElement(
+              child as React.ReactElement<{ visible?: boolean }>,
+              { visible }
+            )
+          : child
+      )}
     </div>
   );
 };
-
-interface MobileNavMenuProps {
-  children: React.ReactNode;
-  className?: string;
-  isOpen: boolean;
-  onClose: () => void;
-  toggleRef?: React.RefObject<HTMLDivElement | null>;
-}
 
 export const MobileNavMenu = ({
   children,
@@ -89,8 +82,6 @@ export const MobileNavMenu = ({
 }: MobileNavMenuProps) => {
   const menuRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
-  const { user } = useAuth();
-  const router = useRouter();
 
   const handleClickOutside = useCallback(
     (e: MouseEvent) => {
@@ -150,34 +141,14 @@ export const MobileNavMenu = ({
                   : child
               )}
             </div>
-            <div className='w-full flex justify-end gap-3 items-center'>
-              {user ? (
-                <>
-                  <div
-                    className='dark:text-black rounded-2xl bg-black/80 dark:bg-white px-4 py-3'
-                    onClick={() => router.push('/settings')}
-                  >
-                    <Settings />
-                  </div>
-                  <div
-                    className='dark:text-black rounded-2xl bg-black/80 dark:bg-white px-4 py-3'
-                    onClick={() => router.push('/favourites')}
-                  >
-                    <Heart />
-                  </div>
-                </>
-              ) : (
-                <div className='dark:text-black rounded-2xl bg-black/80 dark:bg-white px-4 py-3'>
-                  <UserRound
-                    onClick={() => {
-                      onClose();
-                      setOpen(true);
-                    }}
-                  />
-                </div>
-              )}
-              <AnimatedThemeToggler className='text-white dark:text-black rounded-2xl bg-black/80 dark:bg-white px-4 py-3' />
-            </div>
+            <NavIcons
+              wrapperClass={true}
+              iconStyles={true}
+              onLoginClick={() => {
+                onClose();
+                setOpen(true);
+              }}
+            />
           </motion.div>
         )}
       </AnimatePresence>
@@ -195,5 +166,32 @@ export const MobileNavToggle = ({
     <div ref={toggleRef}>
       <AnimatedHamburgerButton onClick={onClick} isOpen={isOpen} />
     </div>
+  );
+};
+
+export const MobileNavItems = ({ items, onItemClick }: NavItemsProps) => {
+  const pathname = usePathname();
+
+  return (
+    <>
+      {items.map((item, idx) => {
+        const isActive = pathname === item.link;
+
+        return (
+          <a
+            key={`mobile-link-${idx}`}
+            href={item.link}
+            onClick={onItemClick}
+            className={`relative flex justify-center items-center font-semibold transition-all duration-300 px-10 py-2 rounded-full ${
+              isActive
+                ? 'bg-pink-300 text-black dark:bg-blue-300 '
+                : 'text-neutral-100 dark:text-black bg-black dark:bg-white'
+            }`}
+          >
+            <span className='relative z-20'>{item.name}</span>
+          </a>
+        );
+      })}
+    </>
   );
 };

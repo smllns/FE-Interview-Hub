@@ -6,6 +6,7 @@ import {
   signupSchema,
 } from './authSchemas';
 
+// notion + question
 export interface NotionSelect {
   name: string;
 }
@@ -50,8 +51,55 @@ export interface Question {
   example: string | null;
 }
 
+//forms
 export type LoginForm = z.infer<typeof loginSchema>;
 export type SignupForm = z.infer<typeof signupSchema>;
 export type ResetForm = z.infer<typeof resetSchema>;
 export type ChangeForm = z.infer<typeof resetPassSchema>;
 export type ResetPassForm = z.infer<typeof resetPassSchema>;
+
+export interface UseAuthFormsProps {
+  initialMode?: 'login' | 'signup' | 'reset';
+  open?: boolean;
+  setOpen?: (open: boolean) => void;
+  setSuccess?: (success: boolean) => void;
+}
+
+//navigation
+export interface MobileNavToggleProps {
+  isOpen: boolean;
+  onClick: () => void;
+  toggleRef?: React.RefObject<HTMLDivElement | null>;
+}
+
+export interface MobileNavMenuProps {
+  children: React.ReactNode;
+  className?: string;
+  isOpen: boolean;
+  onClose: () => void;
+  toggleRef?: React.RefObject<HTMLDivElement | null>;
+}
+
+export interface NavbarProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export interface NavBodyProps {
+  children: React.ReactNode;
+  className?: string;
+  visible?: boolean;
+}
+
+export interface NavItemsProps {
+  items: {
+    name: string;
+    link: string;
+  }[];
+  className?: string;
+  onItemClick?: () => void;
+}
+
+export interface NavbarLogoProps {
+  visible?: boolean;
+}
