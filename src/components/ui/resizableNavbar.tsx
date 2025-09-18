@@ -1,3 +1,4 @@
+// desktop navbar
 'use client';
 import { cn } from '@/lib/utils';
 import { motion, useScroll, useMotionValueEvent } from 'motion/react';

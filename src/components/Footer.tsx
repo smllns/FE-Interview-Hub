@@ -1,6 +1,7 @@
+// footer
 'use client';
-import FooterLinks from './FooterLinks';
 import Feedback from './Feedback';
+import FooterLinks from './ui/footerLinks';
 
 const Footer = () => {
   return (

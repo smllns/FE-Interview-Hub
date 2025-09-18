@@ -1,8 +1,9 @@
+// action icons for navigarion
 import { usePathname, useRouter } from 'next/navigation';
 import { Settings, Heart, UserRound } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AnimatedThemeToggler } from './ThemeToggle';
-import { useAuth } from './useAuth';
+import { useAuth } from '../context/AuthContext';
 
 export const NavIcons = ({
   onLoginClick,

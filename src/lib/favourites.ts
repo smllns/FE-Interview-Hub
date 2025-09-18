@@ -1,3 +1,4 @@
+// add and remove favourites supabase functions
 import { supabase } from './supabaseClient';
 
 export const addFavorite = async (userId: string, questionId: string) => {
@@ -6,11 +7,8 @@ export const addFavorite = async (userId: string, questionId: string) => {
     .select('favourites')
     .eq('id', userId)
     .single();
-
   if (error) return { error };
-
   const updated = [...(data?.favourites || []), questionId];
-
   return await supabase
     .from('profiles')
     .update({ favourites: updated })
@@ -23,9 +21,7 @@ export const removeFavorite = async (userId: string, questionId: string) => {
     .select('favourites')
     .eq('id', userId)
     .single();
-
   if (error) return { error };
-
   const updated = (data?.favourites || []).filter(
     (id: string) => id !== questionId
   );
@@ -35,6 +31,5 @@ export const removeFavorite = async (userId: string, questionId: string) => {
     .update({ favourites: updated })
     .eq('id', userId)
     .select();
-
   return { data: updatedData, error: updateError };
 };

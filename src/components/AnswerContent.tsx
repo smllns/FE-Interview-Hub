@@ -1,3 +1,4 @@
+// content for question answer
 import { AnimatePresence } from 'motion/react';
 import { motion } from 'framer-motion';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';

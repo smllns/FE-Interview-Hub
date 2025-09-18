@@ -1,3 +1,4 @@
+// background data + type for all learning sections
 import Aurora from '@/components/ui/backgrounds/cssBg';
 import Squares from '@/components/ui/backgrounds/htmlBg';
 import LetterGlitch from '@/components/ui/backgrounds/jsBg';

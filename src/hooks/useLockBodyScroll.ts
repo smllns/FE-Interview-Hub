@@ -1,3 +1,4 @@
+// hook for scroll disabling (used while modal/drawer are open)
 import { useEffect } from 'react';
 
 export function useLockBodyScroll(open: boolean) {

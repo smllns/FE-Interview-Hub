@@ -1,3 +1,4 @@
+// content section shown on every learning page
 'use client';
 import { useDarkMode } from '@/hooks/isDarkTheme';
 import { useRef, useState } from 'react';

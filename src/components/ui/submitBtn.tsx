@@ -1,3 +1,4 @@
+// reusable submit button
 import React from 'react';
 
 type SubmitBtnProps = {

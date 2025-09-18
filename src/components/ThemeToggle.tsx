@@ -1,5 +1,5 @@
+// toggle component for theme changing
 'use client';
-
 import { Moon, SunDim } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { flushSync } from 'react-dom';

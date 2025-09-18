@@ -1,3 +1,4 @@
+// random shuffle array function (used for questions shuffling)
 export function shuffleArray<T>(array: T[]): T[] {
   const result = [...array];
   for (let i = result.length - 1; i > 0; i--) {

@@ -1,3 +1,4 @@
+// navbar
 'use client';
 import React, { useState, useRef } from 'react';
 import { Navbar, NavBody, NavItems, NavbarLogo } from './ui/resizableNavbar';

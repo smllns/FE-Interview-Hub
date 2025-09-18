@@ -1,3 +1,4 @@
+// questions list reusable component
 import React from 'react';
 import { QuestionCard } from './QuestionCard';
 import { Question } from '@/lib/types';

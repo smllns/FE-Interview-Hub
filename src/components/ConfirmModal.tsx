@@ -1,3 +1,4 @@
+// modals for settings page
 'use client';
 
 import { X } from 'lucide-react';

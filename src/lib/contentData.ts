@@ -1,3 +1,4 @@
+// title, description and topics data for all learning sections
 export const CONTENT_DATA = {
   html: {
     title: 'HTML Interview Prep',

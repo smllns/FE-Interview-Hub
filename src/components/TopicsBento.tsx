@@ -1,5 +1,7 @@
+// grid for topics
 import { Pointer } from 'lucide-react';
 import PixelCard from './ui/pixelCard';
+import { topicColors } from '@/lib/constants';
 
 interface TopicsBentoProps {
   topics: string[];
@@ -7,29 +9,6 @@ interface TopicsBentoProps {
   selectedTopic: string;
   onSelectedTopic: (level: string) => void;
 }
-
-const topicColors = [
-  {
-    light: '#f87171,#fbbf24,#34d399',
-    dark: '#f8717179,#fbbf2479,#34d3997d',
-  },
-  {
-    light: '#60a5fa,#a78bfa,#f472b6',
-    dark: '#60a5fa80,#a78bfa80,#f472b680',
-  },
-  {
-    light: '#facc15,#22d3ee,#8b5cf6',
-    dark: '#facc1579,#22d3ee7d,#8b5cf67d',
-  },
-  {
-    light: '#fb923c,#f59e0b,#84cc16',
-    dark: '#fb923c7d,#f59e0b7d,#84cc167d',
-  },
-  {
-    light: '#06b6d4,#3b82f6,#9333ea',
-    dark: '#06b6d480,#3b82f680,#9333ea80',
-  },
-];
 
 export const TopicsBento: React.FC<TopicsBentoProps> = ({
   topics,

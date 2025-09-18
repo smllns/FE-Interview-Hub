@@ -1,29 +1,6 @@
+import { levels } from '@/lib/constants';
 import PixelCard from './ui/pixelCard';
-import { Baby, Pointer, Puzzle, Star } from 'lucide-react';
-
-const levels = [
-  {
-    Icon: Baby,
-    name: 'Beginner',
-    description: 'Easy questions for getting started.',
-    colorsLight: '#f87171,#fbbf24,#34d399',
-    colorsDark: '#f8717179,#fbbf2479,#34d3997d',
-  },
-  {
-    Icon: Puzzle,
-    name: 'Middle',
-    description: 'Intermediate questions to level up.',
-    colorsLight: '#60a5fa,#a78bfa,#f472b6',
-    colorsDark: '#60a5fa80,#a78bfa80,#f472b680',
-  },
-  {
-    Icon: Star,
-    name: 'Senior',
-    description: 'Advanced questions for experts.',
-    colorsLight: '#facc15,#22d3ee,#8b5cf6',
-    colorsDark: '#facc1579,#22d3ee7d,#8b5cf67d',
-  },
-];
+import { Pointer } from 'lucide-react';
 
 interface DifficultyBentoProps {
   isDark: boolean;

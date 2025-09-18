@@ -1,3 +1,4 @@
+// hook for checking current theme
 import { useState, useEffect } from 'react';
 
 export function useDarkMode(): boolean {

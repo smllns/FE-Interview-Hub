@@ -1,3 +1,4 @@
+// wrapper for questions background
 import React from 'react';
 import { CirclesBackgroundFullHeight } from './ui/backgrounds/questionsBg';
 import { Question } from '@/lib/types';

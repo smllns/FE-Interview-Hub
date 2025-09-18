@@ -1,6 +1,5 @@
+// hook for handling authentication all actions
 import { useState } from 'react';
-import { useForm, UseFormReturn } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import {
   LoginForm,
   ResetForm,
@@ -14,7 +13,7 @@ import {
   resetSchema,
   signupSchema,
 } from '@/lib/authSchemas';
-import { useAuth } from '@/components/useAuth';
+import { useAuth } from '@/context/AuthContext';
 import {
   onChangePassword,
   onLogout,
@@ -26,6 +25,8 @@ import {
 import { showToast } from '@/lib/toastUtils';
 import { useRouter } from 'next/navigation';
 import { clearUserData } from '@/lib/clearUserData';
+import { useZodForm } from './useZodForm';
+import { withErrorHandling } from '@/lib/withErrorHandling';
 
 export const useAuthForms = ({
   initialMode = 'login',
@@ -42,161 +43,107 @@ export const useAuthForms = ({
   const { refreshUser } = useAuth();
   const router = useRouter();
 
-  const loginForm: UseFormReturn<LoginForm> = useForm<LoginForm>({
-    resolver: zodResolver(loginSchema),
-    mode: 'onChange',
-    delayError: 1000,
-  });
+  const loginForm = useZodForm<LoginForm>(loginSchema);
+  const signupForm = useZodForm<SignupForm>(signupSchema);
+  const resetForm = useZodForm<ResetForm>(resetSchema);
+  const resetPassForm = useZodForm<ResetPassForm>(resetPassSchema);
 
-  const signupForm: UseFormReturn<SignupForm> = useForm<SignupForm>({
-    resolver: zodResolver(signupSchema),
-    mode: 'onChange',
-    delayError: 1000,
-  });
-
-  const resetForm: UseFormReturn<ResetForm> = useForm<ResetForm>({
-    resolver: zodResolver(resetSchema),
-    mode: 'onChange',
-    delayError: 1000,
-  });
-
-  const resetPassForm: UseFormReturn<ResetPassForm> = useForm<ResetPassForm>({
-    resolver: zodResolver(resetPassSchema),
-    mode: 'onChange',
-    delayError: 1000,
-  });
-
-  const handleLogin = async (values: LoginForm) => {
-    const { error } = await onSubmitLogin(values);
-    if (error) {
-      setSubmitError(error.message);
-      showToast('❌ Something went wrong. Try again later.');
-      return;
-    }
-    await refreshUser();
-
-    if (setOpen) setOpen(false);
-    setSubmitError(null);
-    showToast('✅ Successfully logged in!');
-  };
-
-  const handleLogout = async () => {
-    const { error } = await onLogout();
-    if (error) {
-      setSubmitError(error.message);
-      showToast('❌ Something went wrong. Try again later.');
-      return;
-    }
-    await refreshUser();
-
-    if (setOpen) setOpen(false);
-    setSubmitError(null);
-    showToast('✅ Successfully logged out!');
-    router.push('/');
-  };
+  const handleLogin = (values: LoginForm) =>
+    withErrorHandling(
+      () => onSubmitLogin(values),
+      '✅ Successfully logged in!',
+      setSubmitError,
+      () => {
+        refreshUser();
+        setOpen?.(false);
+      }
+    );
+  const handleLogout = () =>
+    withErrorHandling(
+      () => onLogout(),
+      '✅ Successfully logged out!',
+      setSubmitError,
+      () => {
+        router.push('/');
+        setOpen?.(false);
+      }
+    );
 
   const handleDeleteAccount = async (user: { id: string } | null) => {
     if (!user) {
+      setSubmitError('User not found');
       showToast('❌ User not found');
       return;
     }
-    try {
-      const res = await fetch('/api/delete', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: user.id }),
-      });
 
-      if (!res.ok) {
-        const { error } = await res.json();
-        setSubmitError(error || 'Unknown error');
-        showToast('❌ Something went wrong. Try again later.');
-        return;
+    return withErrorHandling(
+      async () => {
+        const res = await fetch('/api/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: user.id }),
+        });
+
+        if (!res.ok) {
+          const { error } = await res.json();
+          return { error: { message: error || 'Failed to delete account' } };
+        }
+
+        return { error: null };
+      },
+      '✅ Account deleted',
+      setSubmitError,
+      () => {
+        clearUserData();
+        refreshUser();
+        setOpen?.(false);
+        router.push('/');
       }
+    );
+  };
 
-      if (setOpen) setOpen(false);
-      clearUserData();
-      await refreshUser();
-      setSubmitError(null);
-      showToast('✅ Account deleted');
-      router.push('/');
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setSubmitError(err.message);
-        showToast('❌ ' + err.message);
-      } else {
-        setSubmitError('Unknown error');
-        showToast('❌ Unknown error');
+  const handleSignup = (values: SignupForm) =>
+    withErrorHandling(
+      () => onSubmitSignup(values),
+      '✅ Successfully created an account!',
+      setSubmitError,
+      () => {
+        refreshUser();
+        setOpen?.(false);
       }
-    }
-  };
+    );
 
-  const handleSignup = async (values: SignupForm) => {
-    const { error } = await onSubmitSignup(values);
-    if (error) {
-      setSubmitError(error.message);
-      showToast('❌ Something went wrong. Try again later.');
-
-      return;
-    }
-    await refreshUser();
-    if (setOpen) setOpen(false);
-    setSubmitError(null);
-    showToast('✅ Successfully created an account!');
-  };
-
-  const handleReset = async ({ email }: { email: string }) => {
-    const { error } = await onResetPassword(email);
-
-    if (error) {
-      setSubmitError(error.message);
-      showToast('❌ Something went wrong. Try again later.');
-
-      return;
-    }
-
-    setSubmitError(null);
-    setResetEmailSent(true);
-  };
-
-  const handleChange = async ({ password }: { password: string }) => {
-    const { error } = await onChangePassword(password);
-
-    if (error) {
-      setSubmitError(error.message);
-      showToast('❌ Something went wrong. Try again later.');
-
-      return;
-    }
-    if (setOpen) setOpen(false);
-
-    setSubmitError(null);
-    setSettingsMode('normal');
-    resetPassForm.reset();
-    showToast('✅ Successfully created an account!');
-  };
-
-  const handleResetPass = async (values: ResetPassForm) => {
-    try {
-      const { error } = await onResetPass(values);
-
-      if (error) {
-        setSubmitError(error.message);
-        showToast('❌ Something went wrong. Try again later.');
-        return;
+  const handleReset = ({ email }: { email: string }) =>
+    withErrorHandling(
+      () => onResetPassword(email),
+      '✅ Check your email!',
+      setSubmitError,
+      () => {
+        setResetEmailSent(true);
       }
+    );
 
-      setSubmitError(null);
-      if (setSuccess) setSuccess(true);
-      showToast('✅ Your password has been updated successfully!');
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setSubmitError(err.message);
-      } else {
-        setSubmitError('Unknown error');
+  const handleChange = ({ password }: { password: string }) =>
+    withErrorHandling(
+      () => onChangePassword(password),
+      '✅ Successfully changed your password!',
+      setSubmitError,
+      () => {
+        setSettingsMode('normal');
+        resetPassForm.reset();
+        setOpen?.(false);
       }
-    }
-  };
+    );
+
+  const handleResetPass = (values: ResetPassForm) =>
+    withErrorHandling(
+      () => onResetPass(values),
+      '✅ Your password has been updated successfully!',
+      setSubmitError,
+      () => {
+        setSuccess?.(true);
+      }
+    );
 
   const handleClose = () => {
     loginForm.reset();

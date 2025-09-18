@@ -1,13 +1,11 @@
+// auth drawer
 'use client';
 import React from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import FormSignup from './forms/FormSignup';
 import { useAuthForms } from '@/hooks/useAuthForms';
 import { useLockBodyScroll } from '@/hooks/useLockBodyScroll';
-import { ArrowBigLeft, X } from 'lucide-react';
-import FormLogin from './forms/FormLogin';
-import FormReset from './forms/FormReset';
+import { AuthHeader, CloseBtn, FormSwitcher, ResetBtn } from './ui/auths';
 
 interface AuthDrawerProps {
   open: boolean;
@@ -53,55 +51,29 @@ const AuthDrawer: React.FC<AuthDrawerProps> = ({ open, setOpen }) => {
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
           >
             <div className='flex justify-between p-4'>
-              <button
-                className='absolute  top-5 right-5 text-gray-600  dark:text-gray-300  '
-                onClick={handleClose}
-              >
-                <X size={20} />
-              </button>
+              <CloseBtn handleClose={handleClose} className='top-5 right-5' />
               {mode === 'reset' && (
-                <button
-                  className='absolute  top-5 left-5 text-gray-600  dark:text-gray-300  '
-                  onClick={() => handleTabChange('login')}
-                >
-                  <ArrowBigLeft size={20} />
-                </button>
+                <ResetBtn
+                  handleTabChange={handleTabChange}
+                  className='top-5 left-5'
+                />
               )}
             </div>
             <div className='px-6 flex flex-col justify-center flex-1 pb-10'>
-              <h2 className='text-2xl font-bold mb-4 text-center'>
-                {mode === 'login'
-                  ? 'Login'
-                  : mode === 'signup'
-                  ? 'Sign Up'
-                  : 'Reset Password'}
-              </h2>
+              <AuthHeader mode={mode} />
 
-              {mode === 'login' ? (
-                // login form
-                <FormLogin
-                  loginForm={loginForm}
-                  onSubmitLogin={handleLogin}
-                  handleTabChange={handleTabChange}
-                  submitError={submitError}
-                />
-              ) : mode === 'signup' ? (
-                // signup form
-                <FormSignup
-                  signupForm={signupForm}
-                  onSubmitSignup={handleSignup}
-                  handleTabChange={handleTabChange}
-                  submitError={submitError}
-                />
-              ) : (
-                // reset form
-                <FormReset
-                  resetForm={resetForm}
-                  onSubmitReset={handleReset}
-                  submitError={submitError}
-                  resetEmailSent={resetEmailSent}
-                />
-              )}
+              <FormSwitcher
+                mode={mode}
+                loginForm={loginForm}
+                handleLogin={handleLogin}
+                handleTabChange={handleTabChange}
+                submitError={submitError}
+                signupForm={signupForm}
+                handleSignup={handleSignup}
+                resetForm={resetForm}
+                handleReset={handleReset}
+                resetEmailSent={resetEmailSent}
+              />
             </div>
           </motion.div>
         </>

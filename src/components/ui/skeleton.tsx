@@ -1,3 +1,4 @@
+// skeleton card/list components
 'use client';
 import React from 'react';
 

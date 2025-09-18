@@ -1,7 +1,8 @@
+// like button in questions
 'use client';
 import React, { useEffect, useState } from 'react';
 import { Heart } from 'lucide-react';
-import { useAuth } from './useAuth';
+import { useAuth } from '../context/AuthContext';
 import AuthModal from './AuthModal';
 import AuthDrawer from './AuthDrawer';
 import { addFavorite, removeFavorite } from '@/lib/favourites';

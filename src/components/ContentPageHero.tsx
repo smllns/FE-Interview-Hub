@@ -1,3 +1,4 @@
+// hero section for every learning component
 import { BACKGROUNDS } from '@/lib/bgData';
 import { ChevronsDown } from 'lucide-react';
 import React from 'react';

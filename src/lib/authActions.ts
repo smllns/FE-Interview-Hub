@@ -1,3 +1,9 @@
+// actions connected with supabase authentication
+// registration +adding profile to table
+// login
+// logout
+// reset send email + actual reset password
+// change password
 import { supabase } from './supabaseClient';
 
 // registration
@@ -10,11 +16,8 @@ export async function onSubmitSignup(values: {
       email: values.email,
       password: values.password,
     });
-
     if (error) throw error;
-
     const user = data.user;
-
     if (user) {
       // adding user to profiles table
       await supabase.from('profiles').insert({
@@ -22,7 +25,6 @@ export async function onSubmitSignup(values: {
         email: user.email,
       });
     }
-
     return { user, error: null };
   } catch (err: unknown) {
     return {
@@ -42,9 +44,7 @@ export async function onSubmitLogin(values: {
       email: values.email,
       password: values.password,
     });
-
     if (error) throw error;
-
     return { user: data.user, error: null };
   } catch (err: unknown) {
     return {
@@ -58,9 +58,7 @@ export async function onSubmitLogin(values: {
 export async function onLogout() {
   try {
     const { error } = await supabase.auth.signOut();
-
     if (error) throw error;
-
     return { error: null };
   } catch (err: unknown) {
     return { error: err instanceof Error ? err : new Error('Unknown error') };
@@ -73,7 +71,6 @@ export async function onResetPassword(email: string) {
     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset`,
     });
-
     if (error) throw error;
     return { data, error: null };
   } catch (err: unknown) {
@@ -88,7 +85,6 @@ export async function onResetPassword(email: string) {
 export async function onChangePassword(password: string) {
   try {
     const { error } = await supabase.auth.updateUser({ password });
-
     if (error) throw error;
     return { error: null };
   } catch (err: unknown) {
@@ -102,9 +98,7 @@ export const onResetPass = async (values: { password: string }) => {
     const { error } = await supabase.auth.updateUser({
       password: values.password,
     });
-
     if (error) throw error;
-
     return { error: null };
   } catch (err: unknown) {
     return { error: err instanceof Error ? err : new Error('Unknown error') };

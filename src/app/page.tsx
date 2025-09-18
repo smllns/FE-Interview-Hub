@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className='relative h-svh flex items-center justify-center'>
       <div className='absolute top-4 right-4'>
-        <AnimatedThemeToggler />
+        <AnimatedThemeToggler className='cursor-pointer' />
       </div>
       <TerminalStarter />
     </div>

@@ -1,3 +1,4 @@
+// context for auth and favourites
 'use client';
 import { supabase } from '@/lib/supabaseClient';
 import { User as SupabaseUser } from '@supabase/auth-js';

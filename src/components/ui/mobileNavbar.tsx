@@ -1,3 +1,4 @@
+// mobile navbar
 'use client';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'motion/react';

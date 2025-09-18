@@ -1,3 +1,4 @@
+// toggle component for mode selections
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { cn } from '@/lib/utils';

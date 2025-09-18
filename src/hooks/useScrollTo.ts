@@ -1,3 +1,4 @@
+// hook for smooth scrolling to ref
 import { useCallback, RefObject } from 'react';
 
 export function useScrollTo<T extends HTMLElement>(ref: RefObject<T | null>) {

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Roboto_Mono } from 'next/font/google';
 import './globals.css';
 import { Toaster } from 'react-hot-toast';
-import { AuthProvider } from '@/components/useAuth';
+import { AuthProvider } from '@/context/AuthContext';
 
 const robotoMono = Roboto_Mono({
   variable: '--font-roboto-mono',

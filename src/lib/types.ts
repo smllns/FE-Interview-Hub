@@ -1,3 +1,5 @@
+// types for notion, forms and navigation
+
 import z from 'zod';
 import {
   loginSchema,

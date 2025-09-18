@@ -1,12 +1,10 @@
+//auth modal
 'use client';
 
 import { createPortal } from 'react-dom';
-import { ArrowBigLeft, X } from 'lucide-react';
-import FormSignup from './forms/FormSignup';
 import { useAuthForms } from '@/hooks/useAuthForms';
 import { useLockBodyScroll } from '@/hooks/useLockBodyScroll';
-import FormLogin from './forms/FormLogin';
-import FormReset from './forms/FormReset';
+import { AuthHeader, CloseBtn, FormSwitcher, ResetBtn } from './ui/auths';
 
 export default function AuthModal({
   open,
@@ -40,56 +38,31 @@ export default function AuthModal({
         className='relative bg-[#e8e8e8] dark:bg-neutral-900 border dark:border-white/30 border-black/40 rounded-xl shadow-lg p-6 w-full max-w-sm'
         onClick={(e) => e.stopPropagation()}
       >
-        {/* close button */}
-        <button
-          className='absolute cursor-pointer top-3 right-3 text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white transition'
-          onClick={handleClose}
-        >
-          <X size={20} />
-        </button>
+        <CloseBtn
+          handleClose={handleClose}
+          className='cursor-pointer top-3 right-3 hover:text-black dark:hover:text-white transition'
+        />
+
         {mode === 'reset' && (
-          <button
-            className='absolute cursor-pointer  left-3 top-3 text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white transition  '
-            onClick={() => handleTabChange('login')}
-          >
-            <ArrowBigLeft size={20} />
-          </button>
+          <ResetBtn
+            handleTabChange={handleTabChange}
+            className='cursor-pointer  left-3 top-3 hover:text-black dark:hover:text-white transition'
+          />
         )}
 
-        {/* header */}
-        <h2 className='text-2xl font-bold mb-4 text-center'>
-          {mode === 'login'
-            ? 'Login'
-            : mode === 'signup'
-            ? 'Sign Up'
-            : 'Reset Password'}
-        </h2>
-
-        {mode === 'login' ? (
-          // login form
-          <FormLogin
-            loginForm={loginForm}
-            onSubmitLogin={handleLogin}
-            handleTabChange={handleTabChange}
-            submitError={submitError}
-          />
-        ) : mode === 'signup' ? (
-          // signup form
-          <FormSignup
-            signupForm={signupForm}
-            onSubmitSignup={handleSignup}
-            handleTabChange={handleTabChange}
-            submitError={submitError}
-          />
-        ) : (
-          // reset form
-          <FormReset
-            resetForm={resetForm}
-            onSubmitReset={handleReset}
-            submitError={submitError}
-            resetEmailSent={resetEmailSent}
-          />
-        )}
+        <AuthHeader mode={mode} />
+        <FormSwitcher
+          mode={mode}
+          loginForm={loginForm}
+          handleLogin={handleLogin}
+          handleTabChange={handleTabChange}
+          submitError={submitError}
+          signupForm={signupForm}
+          handleSignup={handleSignup}
+          resetForm={resetForm}
+          handleReset={handleReset}
+          resetEmailSent={resetEmailSent}
+        />
       </div>
     </div>,
     document.body

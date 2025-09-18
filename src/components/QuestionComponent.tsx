@@ -1,9 +1,10 @@
+// component wrapper for questions, skeleton, mode toggler and background
 import ParallaxQuestionsCircles from './ParallaxQuestionsCircles';
 import ModeToggle from './ModeToggle';
-import { SkeletonList } from './SkeletonList';
 import QuestionsList from './QuestionsList';
 import React, { ForwardedRef } from 'react';
 import { Question } from '@/lib/types';
+import { SkeletonList } from './ui/skeleton';
 
 interface QuestionComponentProps {
   ref?: ForwardedRef<HTMLDivElement>;
