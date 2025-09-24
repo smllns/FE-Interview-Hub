@@ -60,10 +60,7 @@ This project combines **structured interview preparation** with **practical Reac
   - _Quiz mode_ — only question is shown, answer revealed on click
   - _Learning mode_ — question and answer visible together
 
-    <p align="center">
-    <img src="./public/practice.png" height="500" />
-    <img src="./public/study.png" height="500" />
-  </p>
+  ![questions screenshot](./public/questions.png)
 
 - **Favourites system**:
 
